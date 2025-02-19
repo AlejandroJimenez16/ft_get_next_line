@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:59:09 by alejandj          #+#    #+#             */
-/*   Updated: 2025/02/19 12:01:34 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:48:20 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,6 @@ size_t	ft_strlen(const char *s)
 	while (s[i])
 		i++;
 	return (i);
-}
-
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	origin_size_dst;
-	size_t	origin_size_src;
-
-	origin_size_dst = ft_strlen(dst);
-	origin_size_src = ft_strlen(src);
-	if (size <= origin_size_dst)
-		return (size + origin_size_src);
-	i = 0;
-	while (src[i] != '\0' && i < size - origin_size_dst - 1)
-	{
-		dst[origin_size_dst + i] = src[i];
-		i++;
-	}
-	dst[origin_size_dst + i] = '\0';
-	return (origin_size_dst + origin_size_src);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -84,4 +64,34 @@ char	*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t				i;
+	unsigned char		*d;
+	const unsigned char	*s;
+
+	i = 0;
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	if (!dest && !src)
+		return (NULL);
+	while (i < n)
+	{
+		d[i] = s[i];
+		i++;
+	}
+	return (dest);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*str;
+
+	str = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	ft_memcpy(str, s, (ft_strlen(s) + 1));
+	return (str);
 }
