@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:59:09 by alejandj          #+#    #+#             */
-/*   Updated: 2025/02/25 16:48:46 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/02/26 12:24:01 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,32 +66,37 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t				i;
-	unsigned char		*d;
-	const unsigned char	*s;
-
-	i = 0;
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-	if (!dest && !src)
-		return (NULL);
-	while (i < n)
-	{
-		d[i] = s[i];
-		i++;
-	}
-	return (dest);
-}
-
 char	*ft_strdup(const char *s)
 {
 	char	*str;
+	int		i;
 
+	if (!s)
+		return (NULL);
 	str = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (str == NULL)
 		return (NULL);
-	ft_memcpy(str, s, (ft_strlen(s) + 1));
+	i = 0;
+	while (s[i] != '\0')
+	{
+		str[i] = s[i];
+		i++;
+	}
+	str[i] = '\0';
 	return (str);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*p;
+
+	i = 0;
+	p = (unsigned char *)s;
+	while (i < n)
+	{
+		p[i] = (unsigned char)c;
+		i++;
+	}
+	return (s);
 }

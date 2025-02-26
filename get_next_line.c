@@ -6,26 +6,11 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:23:31 by alejandj          #+#    #+#             */
-/*   Updated: 2025/02/25 17:03:40 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/02/26 14:01:47 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t			i;
-	unsigned char	*p;
-
-	i = 0;
-	p = (unsigned char *)s;
-	while (i < n)
-	{
-		p[i] = (unsigned char)c;
-		i++;
-	}
-	return (s);
-}
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
@@ -65,52 +50,54 @@ char	*add_char(char *s, char c)
 	return (new_word);
 }
 
+char	*n_in_buffer(char buffer[BUFFER_SIZE], char *line)
+{
+	char		*after_n;
+	int			i;
+	char		*temp;
+	
+	after_n = ft_strdup(ft_strchr(buffer, '\n') + 1);
+	i = 0;
+	while (buffer[i] != '\0')
+	{
+		if (buffer[i] == '\n')
+		{
+			temp = add_char(line, buffer[i]);
+			free(line);
+			line = temp;
+			ft_memset(buffer, '\0', BUFFER_SIZE);
+			ft_strlcpy(buffer, after_n, ft_strlen(after_n));
+			free(after_n);
+			return (line);
+		}
+		temp = add_char(line, buffer[i]);
+		free(line);
+		line = temp;
+		i++;
+	}
+	return (line);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	buffer[BUFFER_SIZE];
 	ssize_t		bytes_read;
 	char		*line;
 	char		*temp;
-	char		*after_n;
-	int			i;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = ft_strdup("");
 	while (1)
 	{
-		if (*buffer == '\0')
-		{
-			bytes_read = read(fd, buffer, sizeof(buffer));
-			if (bytes_read <= 0)
-			{
-				if (*line != '\0')
-					return (temp = add_char(line, '\0'),
-						free(line), line = temp, line);
-				return (free(line), NULL);
-			}
-		}
+		if (*buffer == '\0' && (bytes_read = read(fd, buffer, sizeof(buffer))) <= 0)
+        {
+            if (*line != '\0')
+                return (temp = add_char(line, '\0'), free(line), line = temp, line);
+            return (free(line), NULL);
+        }
 		if (ft_strchr(buffer, '\n'))
-		{
-			after_n = ft_strdup(ft_strchr(buffer, '\n') + 1);
-			i = 0;
-			while (buffer[i] != '\0')
-			{
-				if (buffer[i] == '\n')
-				{
-					temp = add_char(line, buffer[i]);
-					free(line);
-					line = temp;
-					ft_memset(buffer, '\0', sizeof(buffer));
-					ft_strlcpy(buffer, after_n, ft_strlen(after_n));
-					return (free(after_n), line);
-				}
-				temp = add_char(line, buffer[i]);
-				free(line);
-				line = temp;
-				i++;
-			}
-		}
+			return (line = n_in_buffer(buffer, line), line);
 		temp = ft_strjoin(line, buffer);
 		free(line);
 		line = temp;
