@@ -50,51 +50,53 @@ char	*add_char(char *s, char c)
 	return (new_word);
 }
 
-char	*buffer_is_empty(int fd, char buffer[BUFFER_SIZE], char *line)
+int	buffer_is_empty(int fd, char *buffer, char **line)
 {
-	int		bytes_read;
-	char	*temp;
+	ssize_t		bytes_read;
+	char		*temp;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read <= 0)
 	{
-		if (*line != '\0')
+		if (**line != '\0')
 		{
-			temp = add_char(line, '\0');
-			free(line);
-			line = temp;
-			return (line);
+			temp = add_char(*line, '\0');
+			free(*line);
+			*line = temp;
+			return (0);
 		}
-		free(line);
-		return (NULL);
+		free(*line);
+		*line = NULL;
+		return (0);
 	}
-	return (line);
+	buffer[bytes_read] = '\0';
+	return (1);
 }
 
-char	*n_in_buffer(char buffer[BUFFER_SIZE], char *line)
+char	*n_in_buffer(char *buffer, char *line)
 {
-	char	*after_n;
+	char 	*after_n;
 	int		i;
 	char	*temp;
 
 	after_n = ft_strdup(ft_strchr(buffer, '\n') + 1);
 	i = 0;
-	while (buffer[i] != '\0')
+	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
-		if (buffer[i] == '\n')
-		{
-			temp = add_char(line, buffer[i]);
-			free(line);
-			line = temp;
-			ft_memset(buffer, '\0', BUFFER_SIZE);
-			ft_strlcpy(buffer, after_n, ft_strlen(after_n));
-			free(after_n);
-			return (line);
-		}
 		temp = add_char(line, buffer[i]);
 		free(line);
 		line = temp;
 		i++;
+	}
+	if (buffer[i] == '\n')
+	{
+		temp = add_char(line, buffer[i]);
+		free(line);
+		line = temp;
+		ft_memset(buffer, '\0', sizeof(buffer));
+		ft_strlcpy(buffer, after_n, ft_strlen(after_n));
+		free(after_n);
+		return (line);
 	}
 	return (line);
 }
@@ -112,14 +114,11 @@ char	*get_next_line(int fd)
 	{
 		if (*buffer == '\0')
 		{
-			line = buffer_is_empty(fd, buffer, line);
-			return (line);
+			if (buffer_is_empty(fd, buffer, &line) == 0)
+				return (line);
 		}
 		if (ft_strchr(buffer, '\n'))
-		{
-			line = n_in_buffer(buffer, line);
-			return (line);
-		}
+			return (n_in_buffer(buffer, line));
 		temp = ft_strjoin(line, buffer);
 		free(line);
 		line = temp;

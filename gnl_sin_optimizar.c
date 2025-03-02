@@ -102,4 +102,3 @@ char	*get_next_line(int fd)
 		ft_memset(buffer, '\0', sizeof(buffer));
 	}
 }
-
