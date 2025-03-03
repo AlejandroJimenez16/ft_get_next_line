@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:23:31 by alejandj          #+#    #+#             */
-/*   Updated: 2025/02/26 17:46:50 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:27:15 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,17 @@ char	*add_char(char *s, char c)
 
 int	buffer_is_empty(int fd, char *buffer, char **line)
 {
-	ssize_t		bytes_read;
-	char		*temp;
+	ssize_t	bytes_read;
+	char	*temp;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (bytes_read <= 0)
+	if (bytes_read == -1)
+	{
+		free(*line);
+		*line = NULL;
+		return (0);
+	}
+	if (bytes_read == 0)
 	{
 		if (**line != '\0')
 		{
@@ -75,7 +81,7 @@ int	buffer_is_empty(int fd, char *buffer, char **line)
 
 char	*n_in_buffer(char *buffer, char *line)
 {
-	char 	*after_n;
+	char	*after_n;
 	int		i;
 	char	*temp;
 
