@@ -6,18 +6,23 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:53:58 by alejandj          #+#    #+#             */
-/*   Updated: 2025/02/26 15:56:40 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:17:08 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <fcntl.h>
-# include <stddef.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+# if BUFFER_SIZE > 2147483647 || BUFFER_SIZE < 0
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);

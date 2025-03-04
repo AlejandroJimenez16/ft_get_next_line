@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/03 13:57:58 by alejandj          #+#    #+#             */
-/*   Updated: 2025/03/03 17:57:43 by alejandj         ###   ########.fr       */
+/*   Created: 2025/03/04 15:39:26 by alejandj          #+#    #+#             */
+/*   Updated: 2025/03/04 15:40:10 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,9 @@ int	buffer_is_empty(int fd, char *buffer, char **line)
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read >= 0)
-    	buffer[bytes_read] = '\0';
+		buffer[bytes_read] = '\0';
 	if (bytes_read == -1)
-	{
-		free(*line);
-		*line = NULL;
-		free(buffer);
-		return (0);
-	}
+		return (free(*line), *line = NULL, 0);
 	if (bytes_read == 0)
 	{
 		if (**line != '\0')
@@ -121,21 +116,14 @@ char	*get_next_line(int fd)
 	{
 		buffer[fd] = malloc(BUFFER_SIZE + 1);
 		if (!buffer[fd])
-        return (NULL);
-    buffer[fd][0] = '\0';
+			return (NULL);
+		buffer[fd][0] = '\0';
 	}
 	line = ft_strdup("");
 	while (1)
 	{
-		if (*buffer[fd] == '\0')
-		{
-			if (buffer_is_empty(fd, buffer[fd], &line) == 0)
-			{
-				free(buffer[fd]);
-				buffer[fd] = NULL;
-				return (line);
-			}
-		}
+		if (*buffer[fd] == '\0' && buffer_is_empty(fd, buffer[fd], &line) == 0)
+			return (free(buffer[fd]), buffer[fd] = NULL, line);
 		if (ft_strchr(buffer[fd], '\n'))
 			return (n_in_buffer(buffer[fd], line));
 		temp = ft_strjoin(line, buffer[fd]);
