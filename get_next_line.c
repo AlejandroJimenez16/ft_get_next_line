@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:23:31 by alejandj          #+#    #+#             */
-/*   Updated: 2025/03/03 12:27:15 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/05 12:36:59 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (ft_strlen(src));
 }
 
-char	*add_char(char *s, char c)
+static char	*add_char(char *s, char c)
 {
 	int		i;
 	int		size;
@@ -50,7 +50,7 @@ char	*add_char(char *s, char c)
 	return (new_word);
 }
 
-int	buffer_is_empty(int fd, char *buffer, char **line)
+static int	buffer_is_empty(int fd, char *buffer, char **line)
 {
 	ssize_t	bytes_read;
 	char	*temp;
@@ -79,7 +79,7 @@ int	buffer_is_empty(int fd, char *buffer, char **line)
 	return (1);
 }
 
-char	*n_in_buffer(char *buffer, char *line)
+static char	*n_in_buffer(char *buffer, char *line)
 {
 	char	*after_n;
 	int		i;

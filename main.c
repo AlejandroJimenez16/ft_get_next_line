@@ -7,7 +7,13 @@ int	main(void)
 	int		fd;
 	char	*line;
 
-	fd = open("quijote.txt", O_RDONLY);
+	fd = open("hola.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		perror("Error al abrir el archivo");
+		return (1);
+	}
+
 	while ((line = get_next_line(fd)))
 	{
 		printf("%s", line);
