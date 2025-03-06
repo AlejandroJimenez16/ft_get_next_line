@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:23:31 by alejandj          #+#    #+#             */
-/*   Updated: 2025/03/05 12:36:59 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:24:00 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ static int	buffer_is_empty(int fd, char *buffer, char **line)
 		*line = NULL;
 		return (0);
 	}
-	buffer[bytes_read] = '\0';
 	return (1);
 }
 
@@ -99,7 +98,7 @@ static char	*n_in_buffer(char *buffer, char *line)
 		temp = add_char(line, buffer[i]);
 		free(line);
 		line = temp;
-		ft_memset(buffer, '\0', sizeof(buffer));
+		ft_memset(buffer, '\0', BUFFER_SIZE);
 		ft_strlcpy(buffer, after_n, ft_strlen(after_n));
 		free(after_n);
 		return (line);
@@ -113,7 +112,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*temp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
 		return (NULL);
 	line = ft_strdup("");
 	while (1)
@@ -128,6 +127,6 @@ char	*get_next_line(int fd)
 		temp = ft_strjoin(line, buffer);
 		free(line);
 		line = temp;
-		ft_memset(buffer, '\0', sizeof(buffer));
+		ft_memset(buffer, '\0', BUFFER_SIZE);
 	}
 }
