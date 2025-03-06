@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:23:31 by alejandj          #+#    #+#             */
-/*   Updated: 2025/03/06 12:24:00 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:37:45 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static char	*add_char(char *s, char c)
 	int		size;
 	char	*new_word;
 
+	if (!s)
+		return (NULL);
 	new_word = (char *)malloc((ft_strlen(s) + 2));
 	if (!new_word)
 		return (NULL);
@@ -84,7 +86,11 @@ static char	*n_in_buffer(char *buffer, char *line)
 	int		i;
 	char	*temp;
 
+	if (!ft_strchr(buffer, '\n'))
+		return (NULL);
 	after_n = ft_strdup(ft_strchr(buffer, '\n') + 1);
+	if (!after_n)
+		return (NULL);
 	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
@@ -96,12 +102,9 @@ static char	*n_in_buffer(char *buffer, char *line)
 	if (buffer[i] == '\n')
 	{
 		temp = add_char(line, buffer[i]);
-		free(line);
-		line = temp;
-		ft_memset(buffer, '\0', BUFFER_SIZE);
-		ft_strlcpy(buffer, after_n, ft_strlen(after_n));
-		free(after_n);
-		return (line);
+		return (free(line), line = temp, ft_memset(buffer, '\0', BUFFER_SIZE),
+			ft_strlcpy(buffer, after_n, ft_strlen(after_n)),
+			free(after_n), line);
 	}
 	return (line);
 }
@@ -115,6 +118,8 @@ char	*get_next_line(int fd)
 	if (fd < 0)
 		return (NULL);
 	line = ft_strdup("");
+	if (!line)
+		return (NULL);
 	while (1)
 	{
 		if (*buffer == '\0')
@@ -125,6 +130,8 @@ char	*get_next_line(int fd)
 		if (ft_strchr(buffer, '\n'))
 			return (n_in_buffer(buffer, line));
 		temp = ft_strjoin(line, buffer);
+		if (!temp)
+			return (NULL);
 		free(line);
 		line = temp;
 		ft_memset(buffer, '\0', BUFFER_SIZE);
