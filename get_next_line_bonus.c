@@ -35,6 +35,8 @@ static char	*add_char(char *s, char c)
 	int		size;
 	char	*new_word;
 
+	if (!s)
+		return (NULL);
 	new_word = (char *)malloc((ft_strlen(s) + 2));
 	if (!new_word)
 		return (NULL);
@@ -82,7 +84,11 @@ static char	*n_in_buffer(char *buffer, char *line)
 	int		i;
 	char	*temp;
 
+	if (!ft_strchr(buffer, '\n'))
+		return (NULL);
 	after_n = ft_strdup(ft_strchr(buffer, '\n') + 1);
+	if (!after_n)
+		return (NULL);
 	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 	{
@@ -94,12 +100,9 @@ static char	*n_in_buffer(char *buffer, char *line)
 	if (buffer[i] == '\n')
 	{
 		temp = add_char(line, buffer[i]);
-		free(line);
-		line = temp;
-		ft_memset(buffer, '\0', BUFFER_SIZE);
-		ft_strlcpy(buffer, after_n, ft_strlen(after_n));
-		free(after_n);
-		return (line);
+		return (free(line), line = temp, ft_memset(buffer, '\0', BUFFER_SIZE),
+			ft_strlcpy(buffer, after_n, ft_strlen(after_n)), free(after_n),
+			line);
 	}
 	return (line);
 }
@@ -110,7 +113,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*temp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
 		return (NULL);
 	if (!buffer[fd])
 	{
