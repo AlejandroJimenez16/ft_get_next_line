@@ -6,7 +6,7 @@
 /*   By: alejandj <alejandj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 15:39:26 by alejandj          #+#    #+#             */
-/*   Updated: 2025/03/05 12:29:40 by alejandj         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:40:21 by alejandj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,18 @@ static char	*add_char(char *s, char c)
 
 	if (!s)
 		return (NULL);
-	new_word = (char *)malloc((ft_strlen(s) + 2));
+	size = ft_strlen(s);
+	new_word = (char *)malloc(size + 2);
 	if (!new_word)
 		return (NULL);
 	i = 0;
-	size = ft_strlen(s);
 	while (s[i] != '\0')
 	{
 		new_word[i] = s[i];
 		i++;
 	}
-	new_word[size] = c;
-	new_word[size + 1] = '\0';
+	new_word[i] = c;
+	new_word[i + 1] = '\0';
 	return (new_word);
 }
 
@@ -64,16 +64,14 @@ static int	buffer_is_empty(int fd, char *buffer, char **line)
 		return (free(*line), *line = NULL, 0);
 	if (bytes_read == 0)
 	{
-		if (**line != '\0')
+		if (*line && **line != '\0')
 		{
 			temp = add_char(*line, '\0');
-			free(*line);
-			*line = temp;
-			return (0);
+			if (!temp)
+				return (free(*line), *line = NULL, 0);
+			return (free(*line), *line = temp, 0);
 		}
-		free(*line);
-		*line = NULL;
-		return (0);
+		return (free(*line), *line = NULL, 0);
 	}
 	return (1);
 }
